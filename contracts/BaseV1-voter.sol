@@ -82,7 +82,7 @@ contract BaseV1Voter {
     mapping(uint => address[]) public poolVote; // nft => pools
     mapping(uint => uint) public usedWeights;  // nft => total voting weight of user
     mapping(address => bool) public isGauge;
-    mapping(address => bool) public isWhitelisted;
+    // mapping(address => bool) public isWhitelisted;
 
     event GaugeCreated(address indexed gauge, address creator, address indexed bribe, address indexed pool);
     event Voted(address indexed voter, uint tokenId, int256 weight);
@@ -93,7 +93,7 @@ contract BaseV1Voter {
     event DistributeReward(address indexed sender, address indexed gauge, uint amount);
     event Attach(address indexed owner, address indexed gauge, uint tokenId);
     event Detach(address indexed owner, address indexed gauge, uint tokenId);
-    event Whitelisted(address indexed whitelister, address indexed token);
+    // event Whitelisted(address indexed whitelister, address indexed token);
 
     constructor(address __ve, address _factory, address  _gauges, address _bribes) {
         _ve = __ve;
@@ -115,9 +115,9 @@ contract BaseV1Voter {
 
     function initialize(address[] memory _tokens, address _minter) external {
         require(msg.sender == minter);
-        for (uint i = 0; i < _tokens.length; i++) {
-            _whitelist(_tokens[i]);
-        }
+        // for (uint i = 0; i < _tokens.length; i++) {
+        //     _whitelist(_tokens[i]);
+        // }
         minter = _minter;
     }
 
@@ -217,28 +217,28 @@ contract BaseV1Voter {
         _vote(tokenId, _poolVote, _weights);
     }
 
-    function whitelist(address _token, uint _tokenId) public {
-        if (_tokenId > 0) {
-            require(msg.sender == ve(_ve).ownerOf(_tokenId));
-            require(ve(_ve).balanceOfNFT(_tokenId) > listing_fee());
-        } else {
-            _safeTransferFrom(base, msg.sender, minter, listing_fee());
-        }
+    // function whitelist(address _token, uint _tokenId) public {
+    //     if (_tokenId > 0) {
+    //         require(msg.sender == ve(_ve).ownerOf(_tokenId));
+    //         require(ve(_ve).balanceOfNFT(_tokenId) > listing_fee());
+    //     } else {
+    //         _safeTransferFrom(base, msg.sender, minter, listing_fee());
+    //     }
 
-        _whitelist(_token);
-    }
+    //     _whitelist(_token);
+    // }
 
-    function _whitelist(address _token) internal {
-        require(!isWhitelisted[_token]);
-        isWhitelisted[_token] = true;
-        emit Whitelisted(msg.sender, _token);
-    }
+    // function _whitelist(address _token) internal {
+    //     require(!isWhitelisted[_token]);
+    //     isWhitelisted[_token] = true;
+    //     emit Whitelisted(msg.sender, _token);
+    // }
 
     function createGauge(address _pool) external returns (address) {
         require(gauges[_pool] == address(0x0), "exists");
         require(IBaseV1Factory(factory).isPair(_pool), "!_pool");
         (address tokenA, address tokenB) = IBaseV1Core(_pool).tokens();
-        require(isWhitelisted[tokenA] && isWhitelisted[tokenB], "!whitelisted");
+        // require(isWhitelisted[tokenA] && isWhitelisted[tokenB], "!whitelisted");
         address _bribe = IBaseV1BribeFactory(bribefactory).createBribe();
         address _gauge = IBaseV1GaugeFactory(gaugefactory).createGauge(_pool, _bribe, _ve);
         erc20(base).approve(_gauge, type(uint).max);

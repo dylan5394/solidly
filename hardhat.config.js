@@ -30,9 +30,12 @@ module.exports = {
   networks: {
     hardhat: {
       initialBaseFeePerGas: 0,
+      forking: {
+        url: "https://eth-mainnet.alchemyapi.io/v2/Yv9YTmEgnI4xondHSk9jJpvg97H-cdsq",
+      },
     },
     ftmtest: {
       url: "https://rpc.testnet.fantom.network/",
-    }
+    },
   },
 };
